@@ -22,10 +22,3 @@ If you'd like to contribute to this project by adding more exercises, improving 
 
 # License
 - This project is licensed under the <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GNU General Public License v3.0</a>. Visit the link or see LICENSE.md file for details. Feel free to use and modify the code for your learning purposes.
-
-<div align="center">
-	<br>
-	<a href="https://github.com/MaruthiSikhakolli/UltimateCoding/src/main/resources/readmeStyle.svg">
-		<img src="src/main/resources/readmeStyle.svg">
-	</a>
-</div>
