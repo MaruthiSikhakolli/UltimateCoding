@@ -2,20 +2,29 @@ package seleniumCucumber;
 
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
         plugin = {
-                "pretty",
-                "com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:",
-                "io.qameta.allure.cucumber4jvm.AllureCucumber4Jvm",
-                "json:target/reports/cucumber-json-reports/json-report.json",
-                "html:target/reports/cucumber-html-reports/html-report.html"
+                 "json-pretty:target/cucumber-reports/cucumber-json-report.json",
+                 "html:target/cucumber-reports/cucumber-html-report.html"
         },
         glue = {"src/seleniumCucumber/stepDefinition"},
         features = {"src/seleniumCucumber/features"},
         monochrome = true
 )
+
 public class RunnerTest {
+        @BeforeClass
+        public static void setup() {
+            System.out.println("Before Class");
+        }
+
+        @AfterClass
+        public static void teardown() {
+            System.out.println("After Class");
+        }
 }

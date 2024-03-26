@@ -10,6 +10,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
 import java.io.File;
 import java.time.Duration;
 import java.util.*;
@@ -22,7 +23,6 @@ public class TestSeleniumScript {
     JavascriptExecutor javascriptExecutor;
     Select select;
     Actions actions;
-    String strErrorInfo;
     Logger log = Logger.getLogger(getClass().getName());
 
     public static void main(String[] Args) throws InterruptedException{
@@ -33,24 +33,8 @@ public class TestSeleniumScript {
 
     public void testCode() throws InterruptedException {
         //Launch sampleSiteForSelenium
-        String URL = "file:///Users/maruthisikhakolli/Downloads/DateTime.html";
+        String URL = "https://www.google.com";
         driver.get(URL);
-
-        //Insert test code here
-        WebElement dateBox = driver.findElement(By.xpath("//div[label[text()='Start Date and Time ']]//input[@type='datetime-local']"));
-
-        Thread.sleep(3000);
-        //Fill date as dd/mm/yyyy as 25/09/2024
-        dateBox.sendKeys("25092026");
-
-        //Press tab to shift focus to time field
-        dateBox.sendKeys(Keys.TAB);
-
-        //Fill time as 14:45
-        dateBox.sendKeys("1445");
-
-        //Press tab to shift focus to next fields
-        dateBox.sendKeys(Keys.TAB);
         Thread.sleep(5000);
 
         //Close the browser
@@ -105,7 +89,7 @@ public class TestSeleniumScript {
         }
     }
 
-    public boolean close() {
+    public void close() {
         boolean status = true;
         try {
             driver.quit();
@@ -113,7 +97,6 @@ public class TestSeleniumScript {
             log.severe("Selenium Error occurred while closing the browser");
         }
         // assertTrue(status, "Error performing close action");
-        return status;
     }
 
     private void setImplicitWait(int time) {
@@ -144,4 +127,5 @@ public class TestSeleniumScript {
         prefs.put("download.directory_upgrade", true);
         return prefs;
     }
+
 }

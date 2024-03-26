@@ -19,6 +19,8 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Enumeration;
 import java.util.Properties;
 
@@ -234,8 +236,7 @@ public class DriverManager {
             try {
                 enviroment = config.split("_")[0].toLowerCase();
                 platform = config.split("_")[1].toLowerCase();
-                InputStream input = new FileInputStream(
-                        System.getProperty("user.dir") + "/src/main/java/browserConfigs/" + config + ".properties");
+                InputStream input = Files.newInputStream(Paths.get(System.getProperty("user.dir") + "/src/main/java/browserConfigs/" + config + ".properties"));
                 capability = getCapability(input);
             } catch (Exception e) {
                 System.out.println(
@@ -278,6 +279,4 @@ public class DriverManager {
         Runtime.getRuntime().addShutdownHook(CLOSE_THREAD);
         return getDriver();
     }
-
-
 }

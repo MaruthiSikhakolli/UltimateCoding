@@ -35,6 +35,33 @@ Constraints:
 nums is sorted in non-decreasing order.
 """
 
-# class Solution:
-#     def removeDuplicates(self, nums: List[int]) -> int:
-#         print("Hello")
+class Solution(object):
+    def removeDuplicates(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        numsLength = len(nums)
+        for x in range(0, numsLength-1):
+            numCounter = 1
+            firstElement = nums[x]
+            for y in range(x+1, numsLength):
+                nextElement = nums[y]
+                if firstElement == nextElement:
+                    numCounter = numCounter + 1
+                    if numCounter > 2: nums[y] = 200
+                elif firstElement != nextElement: break
+        nums.sort()
+
+        result = 0
+        for x in nums:
+            if(x != 200): result = result +1
+            else: break
+        print("Required lenght of array:", result)
+        return result
+
+numsList = [0,0,0,0,0]
+solution = Solution()
+solution.removeDuplicates(numsList)
+print("Modified array: ", numsList)
+

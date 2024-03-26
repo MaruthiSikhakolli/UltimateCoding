@@ -19,7 +19,7 @@
         <dependency>
             <groupId>io.github.bonigarcia</groupId>
             <artifactId>webdrivermanager</artifactId>
-            <version>5.0.2</version>
+            <version>5.7.0</version>
         </dependency>
 
         <dependency>
@@ -32,6 +32,12 @@
             <artifactId>cucumber-junit</artifactId>
             <groupId>io.cucumber</groupId>
             <version>4.8.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.masterthought</groupId>
+            <artifactId>cucumber-reporting</artifactId>
+            <version>5.7.7</version>
         </dependency>
 
         <dependency>
@@ -71,36 +77,6 @@
             <version>5.0.4</version>
         </dependency>
 
-        <!-- These are the Allure Reporting dependencies -->
-        <dependency>
-            <groupId>io.qameta.allure</groupId>
-            <artifactId>allure-cucumber4-jvm</artifactId>
-            <version>2.10.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.qameta.allure</groupId>
-            <artifactId>allure-junit4</artifactId>
-            <version>2.10.0</version>
-        </dependency>
-
-        <!-- These are the Spark Reporting dependencies -->
-        <dependency>
-            <artifactId>extentreports-cucumber4-adapter</artifactId>
-            <groupId>com.aventstack</groupId>
-            <version>1.2.1</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>cucumber-java</artifactId>
-                    <groupId>io.cucumber</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>cucumber-core</artifactId>
-                    <groupId>io.cucumber</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
         <!--Logger -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -112,6 +88,13 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>${slf4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.10.2</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -127,61 +110,56 @@
                 </configuration>
             </plugin>
 
-            <!-- These are the Allure Reporting plugins -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M5</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.aspectj</groupId>
-                        <artifactId>aspectjweaver</artifactId>
-                        <version>${aspectj.version}</version>
-                    </dependency>
-                </dependencies>
                 <configuration>
-                    <includes>
-                        <include>**/**/RunnerTest.java</include>
-                    </includes>
-                    <argLine>
-                        -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
-                    </argLine>
-                    <systemPropertyVariables>
-                        <property>
-                            <name>browser</name>
-                            <value>${browser}</value>
-                        </property>
-                        <property>
-                            <name>cloud_config</name>
-                            <value>${cloud_config}</value>
-                        </property>
-                    </systemPropertyVariables>
+                    <testFailureIgnore>true</testFailureIgnore>
                 </configuration>
             </plugin>
-
             <plugin>
-                <groupId>io.qameta.allure</groupId>
-                <artifactId>allure-maven</artifactId>
-                <version>2.9</version>
+                <groupId>net.masterthought</groupId>
+                <artifactId>maven-cucumber-reporting</artifactId>
+                <version>5.7.7</version>
+                <executions>
+                    <execution>
+                        <id>execution</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <projectName>SeleniumCucumber</projectName>
+                            <!-- optional, per documentation set this to "true" to bypass generation of Cucumber Reports entirely, defaults to false if not specified -->
+                            <skip>false</skip>
+                            <!-- output directory for the generated report -->
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                            <!-- optional, defaults to outputDirectory if not specified -->
+                            <inputDirectory>${project.build.directory}/jsonReports</inputDirectory>
+                            <jsonFiles>
+                                <!-- supports wildcard or name pattern -->
+                                <param>**/*.json</param>
+                            </jsonFiles>
+                            <!-- optional, defaults to outputDirectory if not specified -->
+                            <classificationDirectory>${project.build.directory}/classifications</classificationDirectory>
+                            <classificationFiles>
+                                <!-- supports wildcard or name pattern -->
+                                <param>sample.properties</param>
+                                <param>other.properties</param>
+                            </classificationFiles>
+                            <!-- optional, set true to group features by its Ids -->
+                            <mergeFeaturesById>false</mergeFeaturesById>
+                            <!-- optional, set true to get a final report with latest results of the same test from different test runs -->
+                            <mergeFeaturesWithRetest>false</mergeFeaturesWithRetest>
+                            <!-- optional, set true to fail build on test failures -->
+                            <checkBuildResult>false</checkBuildResult>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
 
         <!-- Source directory configuration -->
         <sourceDirectory>src</sourceDirectory>
     </build>
-
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>io.qameta.allure</groupId>
-                <artifactId>allure-maven</artifactId>
-                <version>2.9</version>
-                <configuration>
-                    <reportVersion>2.3.5</reportVersion>
-                </configuration>
-            </plugin>
-        </plugins>
-    </reporting>
-
-
 </project>
