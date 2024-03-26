@@ -1,10 +1,12 @@
 package seleniumCucumber.stepDefinition;
 
-import io.cucumber.core.api.Scenario;
 import io.cucumber.java.After;
+import io.cucumber.java.AfterAll;
+import io.cucumber.java.Scenario;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import seleniumCucumber.utils.ConfigProperties;
+import seleniumCucumber.utils.ReportUtils;
 import java.nio.charset.StandardCharsets;
 
 public class Hooks {
@@ -20,11 +22,16 @@ public class Hooks {
             String filename = scenario.getName().replaceAll("\\s+", "_");
             final String featureError = scenario.getId().replaceAll("\\s+", "_").replaceAll(":", "_").split("\\.")[1];
             filename = filename + "_" + featureError;
-            scenario.embed(filename.getBytes(StandardCharsets.UTF_8), "image/png", filename);
+            scenario.attach(filename.getBytes(StandardCharsets.UTF_8), "image/png", filename);
         }
 
         log.info("==========================================================================");
         log.info("================================Test " + scenario.getStatus().toString() + "===============================");
         log.info("==========================================================================");
+    }
+
+    @AfterAll
+    public static void afterAllScenarios() {
+        ReportUtils.generateReports("target", ConfigProperties.getLocalRun());
     }
 }

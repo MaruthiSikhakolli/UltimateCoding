@@ -43,8 +43,8 @@ public class DriverManager {
      * @return webdriver
      */
     private static WebDriver chooseDriver() {
-        String preferredDriver = System.getProperty("browser", "Chrome");
-        boolean headless = System.getProperty("headless", "false").equals("true");
+        String preferredDriver = ConfigProperties.getBrowser();
+        boolean headless = ConfigProperties.getHeadless().equals("true");
 
         switch (preferredDriver.toLowerCase()) {
             case "safari":
