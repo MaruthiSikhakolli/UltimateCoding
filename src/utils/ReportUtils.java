@@ -2,6 +2,7 @@ package utils;
 
 import net.masterthought.cucumber.Configuration;
 import net.masterthought.cucumber.ReportBuilder;
+import net.masterthought.cucumber.Reportable;
 import net.masterthought.cucumber.json.support.Status;
 import net.masterthought.cucumber.presentation.PresentationMode;
 import org.apache.commons.io.FileUtils;
