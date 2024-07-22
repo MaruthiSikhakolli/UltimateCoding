@@ -1,22 +1,12 @@
 package programs.java;
 
+import javax.sound.midi.SysexMessage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Stack;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -59,16 +49,34 @@ public class UltimateJavaCoding {
 		return isPrime;
 	}
 
-	// Method to verify whether a string is palindrome or not
-	public void palindromeCheck(String input) {
-		String reverseString = "";
-		for (int i = input.length() - 1; i >= 0; i--)
-			reverseString = reverseString + input.charAt(i);
+	// Method to find the longest palindrome string of a given string
+	public String longestPalindrome(String s) {
+		int maxPalinLength = 0;
+		String longestPalindrome = null;
+		int length = s.length();
+		// check all possible sub strings
+		for (int i = 0; i < length; i++) {
+			for (int j = i + 1; j < length; j++) {
+				int len = j - i;
+				String curr = s.substring(i, j + 1);
+				if (isPalindrome(curr)) {
+					if (len > maxPalinLength) {
+						longestPalindrome = curr;
+						maxPalinLength = len;
+					}
+				}
+			}
+		}
+		return longestPalindrome;
+	}
 
-		if (input.equals(reverseString))
-			System.out.println("Given string is a palindrome string");
-		else
-			System.out.println("Given string is not a palindrome string");
+	// Method to verify whether a string is palindrome or not
+	public boolean isPalindrome(String s){
+		for(int i=0; i<s.length()-1; i++){
+			if(s.charAt(i) != s.charAt(s.length()-1-i))
+				return false;
+		}
+		return true;
 	}
 
 	/**
@@ -113,7 +121,7 @@ public class UltimateJavaCoding {
         return result == x ? true : false;
 	}
 
-	//Method to print first 'n' Fibonacci numbers using non recursive approach from the series of infinite Fibonacci numbers starting from 0 1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 1597 2584 4181 6765 10946 17711 28657 46368 75025 121393 196418 317811 514229 832040 1346269 2178309 ..
+	//Method to print first 'n' Fibonacci numbers using non-recursive approach from the series of infinite Fibonacci numbers starting from 0 1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 987 1597 2584 4181 6765 10946 17711 28657 46368 75025 121393 196418 317811 514229 832040 1346269 2178309 ..
 	public void fibonacciSeries(int num) {
 		int a = 0, b = 0, c = 1;
 
@@ -420,15 +428,12 @@ public class UltimateJavaCoding {
 
 	// Method to rotate an array to right by 'k' times
 	public int[] rotateArrayByK(int[] nums, int k) {
-
 		for (int i = 0; i < k; i++) {
-			int j, last;
-			last = nums[nums.length - 1];
-
-			for (j = nums.length - 1; j > 0; j--)
+			for (int j = nums.length - 1; j > 0; j--) {
+				int temp = nums[j];
 				nums[j] = nums[j - 1];
-
-			nums[0] = last;
+				nums[j - 1] = temp;
+			}
 		}
 		return nums;
 	}
@@ -1597,7 +1602,6 @@ public class UltimateJavaCoding {
 	
 	//Find the frequency of words in the given paragraph
 	public void freqOfWordsInPara(String para) {
-		
 		String[] arr = para.split("([,.\\s]+)");
 		Map<String, Integer> map = new HashMap<String, Integer>();
 		
@@ -1609,8 +1613,7 @@ public class UltimateJavaCoding {
 	}
 	
 	//Method to print longest substring without repeating characters from the given string
-	public static String findLongestSubstring(String str)
-	{
+	public static String findLongestSubstring(String str) {
 	    int i;
 	    int n = str.length();
 	     
@@ -1842,22 +1845,121 @@ public class UltimateJavaCoding {
 	        }
 	        return resultList;
 	    }
-	 
-//	 Given a positive integer n, generate an n x n matrix filled with elements from 1 to n2 in spiral order.
-//	 Example 1:
-//		 1 -> 2 -> 3
-//		 		   |
-//		 8 -> 9    4
-//		 |         |
-//		 7 <- 6 <- 5
-//
-//		 Input: n = 3
-//		 Output: [[1,2,3],[8,9,4],[7,6,5]]
-//		 Example 2:
-//
-//		 Input: n = 1
-//		 Output: [[1]]
-	
+
+	 public void printArray(int[] arr){
+		 System.out.print("Array values: ");
+		 for(int i=0; i<arr.length; i++){
+			 System.out.print(arr[i] + " ");
+		 }
+		 System.out.println();
+	 }
+
+	/** Evaluate Reverse Polish Notation
+	 * The problem:
+	 * 	Evaluate the value of an arithmetic expression in Reverse Polish Notation.
+	 * 	Valid operators are +, -, *, /. Each operand may be an integer or another
+	 * 	expression.
+	 * Some examples:
+	 * 	["2", "1", "+", "3", "*"] -> ((2 + 1) * 3) -> 9
+	 * 	["4", "13", "5", "/", "+"] -> (4 + (13 / 5)) -> 6
+	 */
+	public int evalRPN(String[] tokens) {
+		int returnValue = 0;
+		String operators = "+-*/";
+		Stack<String> stack = new Stack<String>();
+		for (String t : tokens) {
+			if (!operators.contains(t)) {
+				stack.push(t);
+			} else {
+				int a = Integer.parseInt(stack.pop());
+				int b = Integer.parseInt(stack.pop());
+				int index = operators.indexOf(t);
+				switch (index) {
+					case 0:
+						stack.push(String.valueOf(a + b));
+						break;
+					case 1:
+						stack.push(String.valueOf(b - a));
+						break;
+					case 2:
+						stack.push(String.valueOf(a * b));
+						break;
+					case 3:
+						stack.push(String.valueOf(b / a));
+						break;
+				}
+			}
+		}
+		returnValue = Integer.parseInt(stack.pop());
+		return returnValue;
+	}
+
+	 /** Given a positive integer n, generate an n x n matrix filled with elements from 1 to n2 in spiral order.
+	 Example 1:
+		 1 -> 2 -> 3
+		 		   |
+		 8 -> 9    4
+		 |         |
+		 7 <- 6 <- 5
+
+		 Input: n = 3
+		 Output: [[1,2,3],[8,9,4],[7,6,5]]
+		 Example 2:
+
+		 Input: n = 1
+		 Output: [[1]]
+	  */
+	 public static int[][] generateSpiralMatrix(int n) {
+		 int[][] matrix = new int[n][n];
+		 int num = 1;
+		 int top = 0, bottom = n - 1, left = 0, right = n - 1;
+
+		 while (num <= n * n) {
+			 // Traverse from left to right along the top row
+			 for (int i = left; i <= right; i++) {
+				 matrix[top][i] = num++;
+			 }
+			 top++;
+
+			 // Traverse from top to bottom along the right column
+			 for (int i = top; i <= bottom; i++) {
+				 matrix[i][right] = num++;
+			 }
+			 right--;
+
+			 // Traverse from right to left along the bottom row
+			 for (int i = right; i >= left; i--) {
+				 matrix[bottom][i] = num++;
+			 }
+			 bottom--;
+
+			 // Traverse from bottom to top along the left column
+			 for (int i = bottom; i >= top; i--) {
+				 matrix[i][left] = num++;
+			 }
+			 left++;
+		 }
+
+		 // Printing the Matrix
+		 for (int[] row : matrix) {
+			 for (int val : row) {
+				 System.out.print(val + "\t");
+			 }
+			 System.out.println();
+		 }
+
+		 return matrix;
+	 }
+
+	public static void printMatrix(int[][] matrix) {
+		for (int[] row : matrix) {
+			for (int num : row) {
+				System.out.print(num + "\t");
+			}
+			System.out.println();
+		}
+	}
+
 	public int[][] generateMatrix(int n) {
 		        int[][] result = new int[n][n];
 		        int cnt = 1;
@@ -1881,7 +1983,100 @@ public class UltimateJavaCoding {
 		        }
 		        return result;
 		    }
-	
+
+	/**
+	 * Given a string s and a dictionary of words dict, determine if s can be segmented into a space-separated sequence of one or more dictionary words.
+	 * For example, given s = "leetcode", dict = ["leet", "code"]. Return true because "leetcode" can be segmented as "leet code".
+     */
+
+	public boolean wordBreakNaiveApproach(String s, Set<String> dict) {
+		return wordBreakHelper(s, dict, 0);
+	}
+
+	public boolean wordBreakHelper(String s, Set<String> dict, int start){
+		if(start == s.length()) return true;
+
+		for(String a: dict){
+			int len = a.length();
+			int end = start+len;
+
+			//end index should be <= string length
+			if(end > s.length()) continue;
+
+			if(s.substring(start, start+len).equals(a))
+				if(wordBreakHelper(s, dict, start+len)) return true;
+		}
+		return false;
+	}
+
+	public boolean wordBreakRegularExpressionAppraoch(String s, Set<String> dict){
+		StringBuilder sb = new StringBuilder();
+
+		for(String str: dict) sb.append(str).append("|");
+		String pattern = sb.substring(0, sb.length()-1);
+
+		pattern = "("+pattern+")*";
+		Pattern p = Pattern.compile(pattern);
+		Matcher m = p.matcher(s);
+
+		//Printing the result
+		System.out.println("Output: " + m.matches());
+        return m.matches();
+    }
+
+	/**
+	 * Given a string s and a dictionary of words dict, add spaces in s to construct a sentence where each word is a valid dictionary word. Return all such possible sentences.
+	 * For example, given s = "catsanddog", dict = ["cat", "cats", "and", "sand", "dog"], the solution is ["cats and dog", "cat sand dog"].
+	 */
+	public List<String> wordBreakII(String s, Set<String> dict) {
+
+		//create an array of ArrayList<String>
+		List<String> dp[] = new ArrayList[s.length()+1];
+		dp[0] = new ArrayList<String>();
+
+		for(int i=0; i<s.length(); i++){
+			if( dp[i] == null )  continue;
+
+			for(String word:dict){
+				int len = word.length();
+				int end = i+len;
+
+				if(end > s.length()) continue;
+
+				if(s.substring(i,end).equals(word)){
+					if(dp[end] == null)
+						dp[end] = new ArrayList<String>();
+					dp[end].add(word);
+				}
+			} }
+
+		List<String> result = new LinkedList<String>();
+		if(dp[s.length()] == null)
+			return result;
+
+		ArrayList<String> temp = new ArrayList<String>();
+		dfs(dp, s.length(), result, temp);
+
+		return result;
+	}
+
+	public void dfs(List<String> dp[],int end,List<String> result, ArrayList<String> tmp){
+		if(end <= 0){
+			String path = tmp.get(tmp.size()-1);
+			for(int i=tmp.size()-2; i>=0; i--)
+				path += " " + tmp.get(i) ;
+
+			result.add(path);
+			return;
+		}
+
+		for(String str : dp[end]){
+			tmp.add(str);
+			dfs(dp, end-str.length(), result, tmp);
+			tmp.remove(tmp.size()-1);
+		}
+	}
+
 	public static void main(String[] args) {
 		int arr[] = { 100, 14, 46, 47, 94, 94, 52, 86, 36, 94, 89 };
 		Object arr2[] = { 1, 2, 1, 2, 1, 2, 3, "Hello", "World", "Hello" };
@@ -1914,7 +2109,23 @@ public class UltimateJavaCoding {
 		};
 		String[] strs = {"flower","flow","flight"};
 
+		HashSet<String> stringDict = new HashSet<String>();
+		stringDict.add("go");
+		stringDict.add("goal");
+		stringDict.add("goals");
+		stringDict.add("special");
+
+		String s1 ="goalspecial";
+		String s2 ="catsanddog";
+
+		HashSet<String> stringDict2 = new HashSet<String>();
+		stringDict.add("cat");
+		stringDict.add("cats");
+		stringDict.add("and");
+		stringDict.add("sand");
+		stringDict.add("dog");
+
 		UltimateJavaCoding UC = new UltimateJavaCoding();
-		System.out.println("Common prefix is: " + UC.longestCommonPrefix(strs));
+		System.out.println(UC.wordBreakII(s2, stringDict2));
 	}
 }
